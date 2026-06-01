@@ -1,0 +1,218 @@
+export interface MediaUploadCandidate {
+  size: number
+  type: string
+}
+
+export interface MediaUploadFailure {
+  name: string
+  reason: string
+}
+
+export interface ClipboardMediaItemLike {
+  kind: string
+  type: string
+  getAsFile: () => File | null
+}
+
+export interface MediaExportAssetLike {
+  name: string
+  url: string
+}
+
+export interface MediaCsvAssetLike extends MediaExportAssetLike {
+  size: number
+  storage?: string
+  width?: number | null
+  height?: number | null
+  usageCount?: number
+  usageScope?: string
+  usageTitles?: string
+  updatedAt?: string
+}
+
+export interface MediaSortableAssetLike extends MediaExportAssetLike {
+  size: number
+  updatedAt: string
+  usageCount?: number
+}
+
+export type MediaSortOption =
+  | "newest"
+  | "oldest"
+  | "largest"
+  | "smallest"
+  | "most-used"
+  | "least-used"
+  | "name-asc"
+  | "name-desc"
+export type MediaOrientation = "landscape" | "portrait" | "square" | "unknown"
+export type MediaFormatFilter = "all" | "webp" | "svg" | "gif" | "png" | "jpeg" | "other"
+
+export const MEDIA_UPLOAD_MAX_BYTES = 4.5 * 1024 * 1024
+export const MEDIA_UPLOAD_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+] as const
+export const MEDIA_UPLOAD_MIME_TYPE_SET = new Set<string>(MEDIA_UPLOAD_MIME_TYPES)
+export const MEDIA_UPLOAD_ACCEPT = MEDIA_UPLOAD_MIME_TYPES.join(",")
+export const MEDIA_UPLOAD_FORMATS_LABEL = "JPG、PNG、WebP、GIF、SVG"
+
+function formatUploadLimit(bytes: number) {
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`
+}
+
+export function getMediaUploadHint() {
+  return `支持 ${MEDIA_UPLOAD_FORMATS_LABEL}，单张图片最大 ${formatUploadLimit(MEDIA_UPLOAD_MAX_BYTES)}；JPG、PNG、WebP 会自动压缩为 WebP。`
+}
+
+export function validateMediaUploadInput(file: MediaUploadCandidate) {
+  if (!file.size) {
+    return "图片内容为空，请重新选择"
+  }
+
+  if (!MEDIA_UPLOAD_MIME_TYPE_SET.has(file.type)) {
+    return `当前只支持上传 ${MEDIA_UPLOAD_FORMATS_LABEL} 图片`
+  }
+
+  if (file.size > MEDIA_UPLOAD_MAX_BYTES) {
+    return `当前上传方式下图片大小不能超过 ${formatUploadLimit(MEDIA_UPLOAD_MAX_BYTES)}`
+  }
+
+  return null
+}
+
+export function formatMediaUploadBatchMessage({
+  successCount,
+  failures,
+  autoSelected = false,
+}: {
+  successCount: number
+  failures: MediaUploadFailure[]
+  autoSelected?: boolean
+}) {
+  if (successCount > 0 && failures.length === 0) {
+    if (autoSelected && successCount === 1) {
+      return "图片已上传并自动选用"
+    }
+    return successCount === 1 ? "素材上传成功" : `已上传 ${successCount} 张素材`
+  }
+
+  const failureSummary = failures
+    .slice(0, 2)
+    .map((failure) => `${failure.name}（${failure.reason}）`)
+    .join("；")
+  const failureSuffix = failures.length > 2 ? "；其余文件也上传失败" : ""
+
+  if (successCount > 0) {
+    return `已上传 ${successCount} 张，${failures.length} 张失败：${failureSummary}${failureSuffix}`
+  }
+
+  return `上传失败：${failureSummary}${failureSuffix}`
+}
+
+export function extractClipboardMediaFiles(items: Iterable<ClipboardMediaItemLike>) {
+  const files: File[] = []
+  for (const item of items) {
+    if (item.kind !== "file") continue
+    if (!MEDIA_UPLOAD_MIME_TYPE_SET.has(item.type)) continue
+    const file = item.getAsFile()
+    if (file) {
+      files.push(file)
+    }
+  }
+  return files
+}
+
+export function buildMediaAssetBatchText(
+  assets: MediaExportAssetLike[],
+  format: "url" | "markdown" | "html"
+) {
+  if (format === "url") {
+    return assets.map((asset) => asset.url).join("\n")
+  }
+
+  if (format === "markdown") {
+    return assets.map((asset) => `![${asset.name}](${asset.url})`).join("\n")
+  }
+
+  return assets.map((asset) => `<img src="${asset.url}" alt="${asset.name}" />`).join("\n")
+}
+
+function escapeCsvCell(value: string) {
+  const normalized = value.replaceAll('"', '""')
+  return /[",\n]/.test(normalized) ? `"${normalized}"` : normalized
+}
+
+function formatCsvDimensions(width?: number | null, height?: number | null) {
+  if (!width || !height) return ""
+  return `${width}x${height}`
+}
+
+export function buildMediaAssetCsv(assets: MediaCsvAssetLike[]) {
+  const header = ["name", "url", "size", "dimensions", "storage", "usageCount", "usageScope", "usageTitles", "updatedAt"]
+  const rows = assets.map((asset) => [
+    asset.name,
+    asset.url,
+    String(asset.size),
+    formatCsvDimensions(asset.width, asset.height),
+    asset.storage || "",
+    String(asset.usageCount ?? 0),
+    asset.usageScope || "",
+    asset.usageTitles || "",
+    asset.updatedAt || "",
+  ])
+
+  return [header, ...rows]
+    .map((row) => row.map((cell) => escapeCsvCell(cell)).join(","))
+    .join("\n")
+}
+
+export function sortMediaAssets<T extends MediaSortableAssetLike>(assets: T[], sortBy: MediaSortOption) {
+  return [...assets].sort((left, right) => {
+    switch (sortBy) {
+      case "oldest":
+        return new Date(left.updatedAt).getTime() - new Date(right.updatedAt).getTime()
+      case "largest":
+        return right.size - left.size
+      case "smallest":
+        return left.size - right.size
+      case "most-used":
+        return (right.usageCount ?? 0) - (left.usageCount ?? 0)
+      case "least-used":
+        return (left.usageCount ?? 0) - (right.usageCount ?? 0)
+      case "name-asc":
+        return left.name.localeCompare(right.name, "zh-CN")
+      case "name-desc":
+        return right.name.localeCompare(left.name, "zh-CN")
+      case "newest":
+      default:
+        return new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+    }
+  })
+}
+
+export function getMediaOrientation(width?: number | null, height?: number | null): MediaOrientation {
+  if (!width || !height) return "unknown"
+  if (width === height) return "square"
+  return width > height ? "landscape" : "portrait"
+}
+
+export function getMediaFormatFilter(contentType?: string | null): Exclude<MediaFormatFilter, "all"> {
+  switch (contentType) {
+    case "image/webp":
+      return "webp"
+    case "image/svg+xml":
+      return "svg"
+    case "image/gif":
+      return "gif"
+    case "image/png":
+      return "png"
+    case "image/jpeg":
+      return "jpeg"
+    default:
+      return "other"
+  }
+}

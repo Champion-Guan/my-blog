@@ -1,0 +1,321 @@
+"use client"
+/* eslint-disable @next/next/no-img-element */
+
+import Link from "next/link"
+import { useMusic } from "@/context/MusicContext"
+import { useRouter } from "next/navigation"
+import { useState, useEffect, useRef } from "react"
+import { Post, TocItem } from "@/lib/posts"
+import PrimaryNavLinks from "@/components/PrimaryNavLinks"
+import Comments from "@/components/Comments"
+import SiteBrand from "@/components/SiteBrand"
+import SiteFooter from "@/components/SiteFooter"
+import hljs from "highlight.js"
+import { useAuthStatus } from "@/hooks/useAuthStatus"
+
+import "highlight.js/styles/github-dark.css"
+
+interface PostClientProps {
+  post: Post
+  content: string
+  readingTime: number
+  headings: TocItem[]
+  relatedPosts: Post[]
+  previousPost?: Post
+  nextPost?: Post
+  brandName: string
+  footerText: string
+}
+
+export default function PostClient({ post, content, readingTime, headings, relatedPosts, previousPost, nextPost, brandName, footerText }: PostClientProps) {
+  const router = useRouter()
+  const [views, setViews] = useState(post.views || 0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const [readingProgress, setReadingProgress] = useState(0)
+  const articleRef = useRef<HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const { isHovering, playTrackBySrc, track } = useMusic()
+  const { isAuthenticated } = useAuthStatus()
+
+  // Back to top & code highlight
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400)
+
+      const article = articleRef.current
+      if (!article) return
+
+      const rect = article.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      const startOffset = 120
+      const visibleProgressStart = Math.max(0, startOffset - rect.top)
+      const trackableHeight = Math.max(1, article.offsetHeight - viewportHeight + 220)
+      const nextProgress = Math.max(0, Math.min(100, (visibleProgressStart / trackableHeight) * 100))
+      setReadingProgress(nextProgress)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Code syntax highlighting
+  useEffect(() => {
+    if (!contentRef.current) return
+    contentRef.current.querySelectorAll("pre code").forEach((block) => {
+      hljs.highlightElement(block as HTMLElement)
+    })
+  }, [content])
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      return
+    }
+
+    // 异步增加访问量
+    fetch(`/api/posts/${post.id}/views`, { method: 'POST' })
+      .then(r => r.json())
+      .then(data => { if (data.views) setViews(data.views) })
+      .catch(() => {})
+  }, [post.id])
+
+  const handleTogglePin = async () => {
+    try {
+      await fetch(`/api/posts/${post.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pinned: !post.pinned }),
+      })
+      router.refresh()
+    } catch {}
+  };
+  return (
+    <div className="min-h-screen text-foreground">
+      {/* Navigation */}
+      <nav className="apple-nav sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 sm:px-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <SiteBrand label={brandName} />
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-4 md:gap-6">
+              <PrimaryNavLinks />
+              {isAuthenticated ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => router.push(`/write/${post.id}`)}
+                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground/70"
+                  >
+                    编辑
+                  </button>
+                  <button
+                    onClick={handleTogglePin}
+                    className={`text-sm font-medium transition-colors ${post.pinned ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/70'}`}
+                  >
+                    {post.pinned ? '取消置顶' : '置顶'}
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        <div className="h-0.5 bg-secondary/70">
+          <div className="h-full bg-primary transition-[width] duration-150" style={{ width: `${readingProgress}%` }} />
+        </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 sm:py-12">
+        {/* Back link */}
+        <Link href="/home" className="brand-solid-button mb-8 inline-flex items-center gap-2">
+          ← 返回首页
+        </Link>
+
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {/* Article */}
+            <article ref={articleRef} className="editorial-card rounded-[2.25rem] sm:p-10">
+              <header className="mb-8">
+                {post.coverImage && (
+                  <div className="mb-8 overflow-hidden rounded-[2rem] border border-white/70 dark:border-white/10">
+                    <img src={post.coverImage} alt={post.title} className="h-60 w-full object-cover sm:h-[25rem]" />
+                  </div>
+                )}
+                <div className="mb-5 flex flex-wrap items-center gap-2.5">
+                  <span className="apple-pill">
+                    {post.category}
+                  </span>
+                  {post.featured ? (
+                    <span className="rounded-full bg-[#ffb98f]/20 px-2.5 py-1 text-xs font-medium text-[#c46d35]">
+                      精选文章
+                    </span>
+                  ) : null}
+                  {post.series ? (
+                    <Link
+                      href={`/series/${encodeURIComponent(post.series)}`}
+                      className="apple-pill hover:bg-white dark:hover:bg-white/12"
+                    >
+                      系列：{post.series}{post.seriesOrder ? ` · 第 ${post.seriesOrder} 篇` : ""}
+                    </Link>
+                  ) : null}
+                  <span className="text-sm text-muted-foreground">{post.date}</span>
+                  <span className="text-sm text-muted-foreground">·</span>
+                  <span className="text-sm text-muted-foreground">{readingTime} 分钟阅读</span>
+                  <span className="text-sm text-muted-foreground">·</span>
+                  <span className="text-sm text-muted-foreground">{views} 次阅读</span>
+                  <div className="flex basis-full flex-wrap gap-2 sm:ml-auto sm:basis-auto">
+                    {post.tags.map(tag => (
+                      <Link
+                        key={tag}
+                        href={`/tags/${encodeURIComponent(tag)}`}
+                        className="apple-pill hover:bg-white dark:hover:bg-white/12"
+                      >
+                        #{tag}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <h1 className="max-w-4xl text-[2.35rem] font-semibold tracking-[-0.065em] sm:text-[3.55rem]">{post.title}</h1>
+                {post.bgmSrc && (
+                  <div className="mt-4 flex items-center gap-3 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => playTrackBySrc(post.bgmSrc)}
+                      className="brand-solid-button"
+                    >
+                      {track.src === post.bgmSrc ? "播放本文 BGM 中" : "播放本文 BGM"}
+                    </button>
+                    <span className="text-sm text-muted-foreground">这篇文章绑定了一首专属背景音乐</span>
+                  </div>
+                )}
+              </header>
+
+              <div
+                ref={contentRef}
+                className="post-content prose prose-lg prose-neutral max-w-none text-muted-foreground"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            </article>
+
+            {(previousPost || nextPost) && (
+              <section className="mt-8 grid gap-4 md:grid-cols-2">
+                {previousPost ? (
+                  <Link href={`/posts/${previousPost.slug || previousPost.id}`} className="editorial-card-soft transition-all hover:-translate-y-0.5">
+                    <p className="text-xs text-muted-foreground">上一篇</p>
+                    <h3 className="mt-2 text-base font-semibold">{previousPost.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{previousPost.excerpt}</p>
+                  </Link>
+                ) : (
+                  <div className="hidden md:block" />
+                )}
+
+                {nextPost ? (
+                  <Link href={`/posts/${nextPost.slug || nextPost.id}`} className="editorial-card-soft text-left transition-all hover:-translate-y-0.5">
+                    <p className="text-xs text-muted-foreground">下一篇</p>
+                    <h3 className="mt-2 text-base font-semibold">{nextPost.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{nextPost.excerpt}</p>
+                  </Link>
+                ) : null}
+              </section>
+            )}
+
+            {/* Comments */}
+            <div className="mt-8">
+              <Comments post={post} />
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          {(headings.length > 0 || relatedPosts.length > 0) && (
+            <aside className="w-full flex-shrink-0 lg:sticky lg:top-24 lg:w-72">
+              <div className="space-y-6">
+                <div className="editorial-card-soft">
+                  <h3 className="mb-3 text-sm font-semibold text-foreground">文章信息</h3>
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <p>发布时间：{post.date}</p>
+                    <p>阅读时长：{readingTime} 分钟</p>
+                    <p>浏览次数：{views}</p>
+                    <p>分类：{post.category}</p>
+                    {post.featured ? <p>内容标记：精选</p> : null}
+                    {post.series ? <p>系列：{post.series}{post.seriesOrder ? ` · 第 ${post.seriesOrder} 篇` : ""}</p> : null}
+                  </div>
+                  {post.tags.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {post.tags.map((tag) => (
+                        <Link
+                          key={tag}
+                          href={`/tags/${encodeURIComponent(tag)}`}
+                          className="apple-pill hover:bg-white dark:hover:bg-white/12"
+                        >
+                          #{tag}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {headings.length > 0 && (
+                  <div className="editorial-card-soft">
+                    <h3 className="mb-3 text-sm font-semibold text-foreground">目录</h3>
+                    <nav className="space-y-1.5">
+                      {headings.map((heading) => (
+                        <a
+                          key={heading.id}
+                          href={`#${heading.id}`}
+                          className={`block text-sm text-muted-foreground transition-colors hover:text-primary ${
+                            heading.level === 3 ? "pl-4" : ""
+                          }`}
+                        >
+                          {heading.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
+
+                {relatedPosts.length > 0 && (
+                  <div>
+                    <h3 className="mb-4 text-sm font-semibold text-muted-foreground">相关文章</h3>
+                    <div className="space-y-3">
+                      {relatedPosts.map(rp => (
+                        <Link
+                          key={rp.id}
+                          href={`/posts/${rp.slug || rp.id}`}
+                          className="editorial-card-soft block rounded-[1.5rem] p-4 transition-all hover:-translate-y-0.5"
+                        >
+                          <span className="apple-pill mb-2 inline-flex">
+                            {rp.category}
+                          </span>
+                          <h4 className="line-clamp-2 text-sm font-semibold transition-colors hover:text-primary">
+                            {rp.title}
+                          </h4>
+                          <p className="mt-1 text-xs text-muted-foreground">{rp.date}</p>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </aside>
+          )}
+        </div>
+      </div>
+
+      {/* Back to Top Button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`brand-solid-button fixed bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded-full text-lg transition-all duration-300 ${
+          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        } right-[84px] sm:right-6 ${isHovering ? "lg:right-[20rem]" : "lg:right-[80px]"}`}
+        aria-label="回到顶部"
+      >
+        ↑
+      </button>
+
+      {/* Footer */}
+      <SiteFooter
+        text={footerText}
+        className="mt-16 border-t border-white/60 py-10 dark:border-white/10"
+        innerClassName="max-w-6xl mx-auto px-6 text-center text-sm text-muted-foreground"
+      />
+    </div>
+  )
+}
