@@ -1,5 +1,5 @@
-import { getAllPosts, getAllSeries } from "@/lib/posts"
-import { absoluteUrl, siteConfig } from "@/lib/site-config"
+import { getAllPosts, getAllSeries } from "@/工具/文章"
+import { absoluteUrl, siteConfig } from "@/工具/站点配置"
 import type { MetadataRoute } from "next"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

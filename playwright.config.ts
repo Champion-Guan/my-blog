@@ -4,7 +4,7 @@ const port = 3101
 const baseURL = `http://127.0.0.1:${port}`
 
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "./测试/端到端",
   fullyParallel: false,
   retries: 0,
   reporter: [["list"], ["html", { open: "never" }]],
@@ -15,7 +15,7 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   webServer: {
-    command: "node tests/e2e/start-server.mjs",
+    command: "node 测试/端到端/启动服务端.mjs",
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

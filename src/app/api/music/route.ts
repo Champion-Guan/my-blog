@@ -1,9 +1,9 @@
 import { unstable_cache } from "next/cache"
 import { NextResponse } from "next/server"
-import { listPublicMusicTracks, type MusicTrack } from "@/lib/server/music"
-import { CACHE_TAGS } from "@/lib/server/site-cache"
+import { listPublicMusicTracks, type MusicTrack } from "@/工具/服务端/音乐"
+import { CACHE_TAGS } from "@/工具/服务端/站点缓存"
 
-export type { MusicTrack } from "@/lib/server/music"
+export type { MusicTrack } from "@/工具/服务端/音乐"
 
 const getCachedPlaylist = unstable_cache(listPublicMusicTracks, ["music-playlist"], {
   tags: [CACHE_TAGS.music],

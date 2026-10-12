@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { createComment, deleteComment, getCommentById, listCommentsByPost, moderateComment } from '@/lib/server/comments'
-import { getCommentUserFromRequest } from '@/lib/server/comment-user-auth'
-import { checkCommentRateLimit, validateCommentContent } from '@/lib/server/comment-guard'
-import { invalidateCommentsCache } from '@/lib/server/site-cache'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { createComment, deleteComment, getCommentById, listCommentsByPost, moderateComment } from '@/工具/服务端/comments'
+import { getCommentUserFromRequest } from '@/工具/服务端/评论用户身份验证'
+import { checkCommentRateLimit, validateCommentContent } from '@/工具/服务端/评论防护'
+import { invalidateCommentsCache } from '@/工具/服务端/站点缓存'
 
 // GET /api/comments/[postId] - 获取某篇文章的所有评论
 export async function GET(

@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "backup:snapshot": "tsx scripts/export-site-snapshot.ts",
-    "restore:snapshot": "tsx scripts/restore-site-snapshot.ts",
-    "test": "find tests -name '*.test.ts' -type f | sort | xargs tsx --test --test-concurrency=1",
+    "backup:snapshot": "tsx 脚本/导出站点快照.ts",
+    "restore:snapshot": "tsx 脚本/恢复站点快照.ts",
+    "test": "find 测试 -name '*.test.ts' -type f | sort | xargs tsx --test --test-concurrency=1",
     "test:e2e": "npm run build && playwright test",
     "test:all": "npm test && npm run lint && npm run build && npm run test:e2e"
   },

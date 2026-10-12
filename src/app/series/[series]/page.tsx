@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import SectionPageShell from "@/components/SectionPageShell"
-import { calculateReadingTime, getAllSeries, getPostsBySeries } from "@/lib/posts"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
+import SectionPageShell from "@/组件/栏目页框架"
+import { calculateReadingTime, getAllSeries, getPostsBySeries } from "@/工具/文章"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
 
 interface SeriesPageProps {
   params: Promise<{ series: string }>

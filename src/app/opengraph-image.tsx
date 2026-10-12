@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { clampOgText } from "@/lib/og"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { clampOgText } from "@/工具/分享图片"
 
 export const size = {
   width: 1200,
@@ -66,7 +66,7 @@ export default async function OpenGraphImage() {
               {(settings.brandName.trim().charAt(0) || "C").toUpperCase()}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div style={{ fontSize: "20px", letterSpacing: "0.24em", color: "#7b7f8f" }}>PERSONAL BLOG</div>
+              <div style={{ fontSize: "20px", letterSpacing: "0.24em", color: "#7b7f8f" }}>个人博客</div>
               <div style={{ fontSize: "34px", fontWeight: 700 }}>{settings.brandName}</div>
             </div>
           </div>

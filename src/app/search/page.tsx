@@ -1,16 +1,16 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import HighlightedText from "@/components/HighlightedText"
-import PostSearchResultCard from "@/components/PostSearchResultCard"
-import SearchQueryInput from "@/components/SearchQueryInput"
-import SearchRecentSearches from "@/components/SearchRecentSearches"
-import SectionPageShell from "@/components/SectionPageShell"
-import type { Post } from "@/lib/posts"
-import { getAllPosts, getAllSeries, getAllTags } from "@/lib/posts"
-import { filterPostsForListing, getPopularSearchTerms, getPostCategoryBreakdown, getPostSearchFallbackSuggestions, getPostTagBreakdown, sortSearchResults } from "@/lib/post-search"
-import { buildSearchHref, parseSearchQueryState } from "@/lib/search-query"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
+import HighlightedText from "@/组件/高亮文本"
+import PostSearchResultCard from "@/组件/文章搜索结果卡片"
+import SearchQueryInput from "@/组件/搜索输入框"
+import SearchRecentSearches from "@/组件/最近搜索"
+import SectionPageShell from "@/组件/栏目页框架"
+import type { Post } from "@/工具/文章"
+import { getAllPosts, getAllSeries, getAllTags } from "@/工具/文章"
+import { filterPostsForListing, getPopularSearchTerms, getPostCategoryBreakdown, getPostSearchFallbackSuggestions, getPostTagBreakdown, sortSearchResults } from "@/工具/文章搜索"
+import { buildSearchHref, parseSearchQueryState } from "@/工具/搜索查询"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
 
 export const revalidate = 300
 
@@ -193,7 +193,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {!state.searchQuery && !state.selectedTag && !state.selectedCategory && popularSearchTerms.length > 0 ? (
         <section className="mb-6 rounded-[1.75rem] border border-border/50 bg-card p-5">
           <div className="mb-3">
-            <p className="section-kicker">Trending Searches</p>
+            <p className="section-kicker">热门搜索</p>
             <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em]">热门搜索词</h2>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -222,7 +222,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <section className="mb-6 rounded-[1.75rem] border border-border/50 bg-card p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <p className="section-kicker">Category Breakdown</p>
+              <p className="section-kicker">分类统计</p>
               <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em]">结果分类分布</h2>
             </div>
             {state.selectedCategory ? (
@@ -267,7 +267,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <section className="mb-6 rounded-[1.75rem] border border-border/50 bg-card p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <p className="section-kicker">Tag Breakdown</p>
+              <p className="section-kicker">标签统计</p>
               <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em]">结果标签分布</h2>
             </div>
             {state.selectedTag ? (
@@ -337,7 +337,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </div>
             {fallbackSuggestions.length > 0 ? (
               <div className="rounded-[1.75rem] border border-border/50 bg-card p-5">
-                <p className="section-kicker">Did You Mean</p>
+                <p className="section-kicker">你是否想搜索</p>
                 <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em]">你是不是想搜</h2>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {fallbackSuggestions.map((suggestion) => (
@@ -364,7 +364,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {showSuggestions ? (
         <section className="mt-8 space-y-5">
           <div>
-            <p className="section-kicker">Suggested Searches</p>
+            <p className="section-kicker">推荐搜索</p>
             <h2 className="section-title mt-2">猜你想搜</h2>
           </div>
 

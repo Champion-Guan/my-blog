@@ -1,5 +1,5 @@
-import { PaletteHeroTrio } from "@/components/PaletteCharacters"
-import SiteBrand from "@/components/SiteBrand"
+import { PaletteHeroTrio } from "@/组件/彩色角色"
+import SiteBrand from "@/组件/站点品牌"
 
 function LoadingLine({ width }: { width: string }) {
   return <div className="h-4 rounded-full bg-secondary/70" style={{ width }} />
@@ -17,7 +17,7 @@ export default function Loading() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="editorial-card rounded-[2.25rem] p-6 sm:p-8">
-            <p className="section-kicker">Loading</p>
+            <p className="section-kicker">加载中</p>
             <div className="mt-4 space-y-4">
               <LoadingLine width="48%" />
               <LoadingLine width="88%" />
@@ -43,7 +43,7 @@ export default function Loading() {
             <div className="flex w-full max-w-sm flex-col items-center gap-5 text-center">
               <PaletteHeroTrio />
               <div>
-                <p className="section-kicker">Please Wait</p>
+                <p className="section-kicker">请稍候</p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   页面正在准备中，稍等一下就会出现。
                 </p>

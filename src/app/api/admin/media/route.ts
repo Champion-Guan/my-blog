@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateMediaUploadInput, type MediaUploadFailure } from '@/lib/media-upload'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { canWriteMediaLibrary, deleteMediaFile, getMediaLibraryWarning, listMediaAssets, saveMediaFile } from '@/lib/server/media'
+import { validateMediaUploadInput, type MediaUploadFailure } from '@/工具/媒体上传'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { canWriteMediaLibrary, deleteMediaFile, getMediaLibraryWarning, listMediaAssets, saveMediaFile } from '@/工具/服务端/媒体'
 
 export async function GET(request: NextRequest) {
   if (!isAuthenticatedRequest(request)) {
