@@ -1,4 +1,4 @@
-name: CI
+name: 持续集成
 
 on:
   push:
@@ -12,29 +12,29 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: 检出仓库
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
+      - name: 配置 Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: npm ci
 
-      - name: Run unit and integration tests
+      - name: 运行单元与集成测试
         run: npm test
 
-      - name: Run lint
+      - name: 检查代码规范
         run: npm run lint
 
-      - name: Build application
+      - name: 构建应用
         run: npm run build
 
-      - name: Install Playwright browsers
+      - name: 安装浏览器测试环境
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright E2E
+      - name: 运行浏览器端到端测试
         run: npx playwright test

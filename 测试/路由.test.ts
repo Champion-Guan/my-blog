@@ -1,24 +1,72 @@
-import test from "node:test"
+import fs from "node:fs"
+import os from "node:os"
+import path from "node:path"
+import test, { after, before } from "node:test"
 import assert from "node:assert/strict"
 import { NextRequest } from "next/server"
-import { GET as postsGet, POST as postsPost } from "../src/app/api/posts/route"
-import { DELETE as adminMediaDelete, POST as adminMediaPost } from "../src/app/api/admin/media/route"
-import { POST as adminMediaReindexPost } from "../src/app/api/admin/media/reindex/route"
-import { GET as adminMusicGet, POST as adminMusicPost, DELETE as adminMusicDelete } from "../src/app/api/admin/music/route"
-import { POST as adminMusicClientUploadPost } from "../src/app/api/admin/music/client-upload/route"
-import { POST as adminMusicFinalizePost } from "../src/app/api/admin/music/finalize/route"
-import { GET as adminSettingsGet, PATCH as adminSettingsPatch } from "../src/app/api/admin/settings/route"
-import { GET as adminBackupGet } from "../src/app/api/admin/backup/route"
-import { GET as authStatusGet } from "../src/app/api/auth/status/route"
-import { GET as feedGet } from "../src/app/api/feed/route"
-import { GET as adminMediaGet } from "../src/app/api/admin/media/route"
-import { GET as publicSiteSettingsGet } from "../src/app/api/site-settings/route"
-import { POST as postViewsPost } from "../src/app/api/posts/[id]/views/route"
-import { GET as postDetailGet, PATCH as postPatch } from "../src/app/api/posts/[id]/route"
-import { GET as versionsGet, POST as versionsPost } from "../src/app/api/posts/[id]/versions/route"
 import { buildSessionCookie, createSessionToken } from "../src/工具/服务端/身份验证"
 import robots from "../src/app/robots"
-import manifest from "../src/app/manifest"
+// 使用临时工作目录，避免测试读取或修改开发环境的数据库。
+const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "myblog-routes-"))
+process.env.BLOG_DATA_DIR = workspaceDir
+process.env.BLOG_DB_PATH = path.join(workspaceDir, "blog.db")
+process.env.BLOG_POSTS_JSON_PATH = path.join(workspaceDir, "文章.json")
+process.env.BLOG_COMMENTS_JSON_PATH = path.join(workspaceDir, "评论.json")
+delete process.env.DATABASE_URL
+delete process.env.VERCEL
+fs.writeFileSync(process.env.BLOG_POSTS_JSON_PATH, JSON.stringify({ posts: [{
+  id: "welcome", title: "欢迎来到 Champion 的博客", content: "欢迎阅读测试文章。",
+  excerpt: "路由测试文章", date: "2026-01-01", category: "测试", tags: ["测试"], draft: false,
+}] }))
+fs.writeFileSync(process.env.BLOG_COMMENTS_JSON_PATH, JSON.stringify({ comments: {} }))
+after(() => {
+  globalThis.__championBlogDb?.close()
+  globalThis.__championBlogDb = undefined
+  fs.rmSync(workspaceDir, { recursive: true, force: true })
+})
+
+let postsGet: typeof import("../src/app/api/posts/route")["GET"]
+let postsPost: typeof import("../src/app/api/posts/route")["POST"]
+let adminMediaDelete: typeof import("../src/app/api/admin/media/route")["DELETE"]
+let adminMediaPost: typeof import("../src/app/api/admin/media/route")["POST"]
+let adminMediaReindexPost: typeof import("../src/app/api/admin/media/reindex/route")["POST"]
+let adminMusicGet: typeof import("../src/app/api/admin/music/route")["GET"]
+let adminMusicPost: typeof import("../src/app/api/admin/music/route")["POST"]
+let adminMusicDelete: typeof import("../src/app/api/admin/music/route")["DELETE"]
+let adminMusicClientUploadPost: typeof import("../src/app/api/admin/music/client-upload/route")["POST"]
+let adminMusicFinalizePost: typeof import("../src/app/api/admin/music/finalize/route")["POST"]
+let adminSettingsGet: typeof import("../src/app/api/admin/settings/route")["GET"]
+let adminSettingsPatch: typeof import("../src/app/api/admin/settings/route")["PATCH"]
+let adminBackupGet: typeof import("../src/app/api/admin/backup/route")["GET"]
+let authStatusGet: typeof import("../src/app/api/auth/status/route")["GET"]
+let feedGet: typeof import("../src/app/api/feed/route")["GET"]
+let adminMediaGet: typeof import("../src/app/api/admin/media/route")["GET"]
+let publicSiteSettingsGet: typeof import("../src/app/api/site-settings/route")["GET"]
+let postViewsPost: typeof import("../src/app/api/posts/[id]/views/route")["POST"]
+let postDetailGet: typeof import("../src/app/api/posts/[id]/route")["GET"]
+let postPatch: typeof import("../src/app/api/posts/[id]/route")["PATCH"]
+let versionsGet: typeof import("../src/app/api/posts/[id]/versions/route")["GET"]
+let versionsPost: typeof import("../src/app/api/posts/[id]/versions/route")["POST"]
+let manifest: typeof import("../src/app/manifest")["default"]
+
+before(async () => {
+  ;({ GET: postsGet, POST: postsPost } = await import("../src/app/api/posts/route"))
+  ;({ DELETE: adminMediaDelete, POST: adminMediaPost } = await import("../src/app/api/admin/media/route"))
+  ;({ POST: adminMediaReindexPost } = await import("../src/app/api/admin/media/reindex/route"))
+  ;({ GET: adminMusicGet, POST: adminMusicPost, DELETE: adminMusicDelete } = await import("../src/app/api/admin/music/route"))
+  ;({ POST: adminMusicClientUploadPost } = await import("../src/app/api/admin/music/client-upload/route"))
+  ;({ POST: adminMusicFinalizePost } = await import("../src/app/api/admin/music/finalize/route"))
+  ;({ GET: adminSettingsGet, PATCH: adminSettingsPatch } = await import("../src/app/api/admin/settings/route"))
+  ;({ GET: adminBackupGet } = await import("../src/app/api/admin/backup/route"))
+  ;({ GET: authStatusGet } = await import("../src/app/api/auth/status/route"))
+  ;({ GET: feedGet } = await import("../src/app/api/feed/route"))
+  ;({ GET: adminMediaGet } = await import("../src/app/api/admin/media/route"))
+  ;({ GET: publicSiteSettingsGet } = await import("../src/app/api/site-settings/route"))
+  ;({ POST: postViewsPost } = await import("../src/app/api/posts/[id]/views/route"))
+  ;({ GET: postDetailGet, PATCH: postPatch } = await import("../src/app/api/posts/[id]/route"))
+  ;({ GET: versionsGet, POST: versionsPost } = await import("../src/app/api/posts/[id]/versions/route"))
+  ;({ default: manifest } = await import("../src/app/manifest"))
+})
 
 test("订阅接口使用生产域名及 RSS 元信息", async () => {
   const response = await feedGet()
