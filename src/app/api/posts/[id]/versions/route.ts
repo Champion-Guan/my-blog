@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { invalidatePostsCache } from '@/lib/server/site-cache'
-import { getPostVersion, listPostVersions, updatePost } from '@/lib/server/store'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { invalidatePostsCache } from '@/工具/服务端/站点缓存'
+import { getPostVersion, listPostVersions, updatePost } from '@/工具/服务端/存储'
 
 export async function GET(
   request: NextRequest,

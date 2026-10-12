@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { buildUserSessionCookie, createUserSessionToken, verifyUserPassword } from '@/lib/server/comment-user-auth'
-import { consumePersistentRateLimit, getRequesterKey, resetPersistentRateLimit } from '@/lib/server/rate-limit'
-import { getUserByUsername } from '@/lib/server/store'
+import { buildUserSessionCookie, createUserSessionToken, verifyUserPassword } from '@/工具/服务端/评论用户身份验证'
+import { consumePersistentRateLimit, getRequesterKey, resetPersistentRateLimit } from '@/工具/服务端/频率限制'
+import { getUserByUsername } from '@/工具/服务端/存储'
 
 const USER_LOGIN_RATE_WINDOW_MS = 10 * 60_000
 const USER_LOGIN_RATE_LIMIT = 5

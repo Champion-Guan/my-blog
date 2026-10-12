@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import StructuredDataScript from "@/components/StructuredDataScript"
-import { buildAboutStructuredData, getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import AboutClient from "./AboutClient"
+import StructuredDataScript from "@/组件/结构化数据脚本"
+import { buildAboutStructuredData, getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import AboutClient from "./关于页面"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getResolvedSeoSettings()

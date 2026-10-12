@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import type { Post } from '@/lib/posts'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { invalidatePostsCache } from '@/lib/server/site-cache'
-import { deletePost, getPostById, getPostBySlug, updatePost } from '@/lib/server/store'
+import type { Post } from '@/工具/文章'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { invalidatePostsCache } from '@/工具/服务端/站点缓存'
+import { deletePost, getPostById, getPostBySlug, updatePost } from '@/工具/服务端/存储'
 
 type PostPatch = Partial<Pick<Post, 'slug' | 'pinned' | 'featured' | 'draft' | 'series' | 'seriesOrder' | 'title' | 'excerpt' | 'content' | 'category' | 'tags' | 'coverImage' | 'bgmSrc'>>
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-import { isAuthenticatedRequest } from "@/lib/server/auth"
-import { getSiteSettings, updateSiteSettings } from "@/lib/server/site-settings"
-import type { SiteSettings } from "@/lib/site-settings"
+import { isAuthenticatedRequest } from "@/工具/服务端/身份验证"
+import { getSiteSettings, updateSiteSettings } from "@/工具/服务端/站点设置"
+import type { SiteSettings } from "@/工具/站点设置"
 
 function safeRevalidatePath(path: string, type?: "page" | "layout") {
   try {

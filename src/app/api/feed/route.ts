@@ -1,6 +1,6 @@
-import { getAllPosts } from "@/lib/posts"
-import { absoluteUrl, siteConfig } from "@/lib/site-config"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
+import { getAllPosts } from "@/工具/文章"
+import { absoluteUrl, siteConfig } from "@/工具/站点配置"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
 
 export async function GET() {
   const posts = (await getAllPosts()).filter((post) => !post.draft)

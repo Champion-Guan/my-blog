@@ -1,0 +1,51 @@
+import test from "node:test"
+import assert from "node:assert/strict"
+import { buildSearchHref, parseSearchQueryState } from "../src/工具/搜索查询"
+
+test("搜索查询解析规范化页面参数", () => {
+  const state = parseSearchQueryState({
+    q: " React ",
+    tag: "Hooks",
+    category: "前端",
+    sort: "oldest",
+    page: "3",
+  })
+
+  assert.deepEqual(state, {
+    searchQuery: "React",
+    selectedTag: "Hooks",
+    selectedCategory: "前端",
+    currentPage: 3,
+    sortBy: "oldest",
+    viewMode: "cards",
+  })
+})
+
+test("搜索查询无效值回退到安全默认值", () => {
+  const state = parseSearchQueryState({
+    page: "-2",
+    sort: "weird",
+  })
+
+  assert.deepEqual(state, {
+    searchQuery: "",
+    selectedTag: null,
+    selectedCategory: null,
+    currentPage: 1,
+    sortBy: "default",
+    viewMode: "cards",
+  })
+})
+
+test("搜索链接省略默认参数并保留活动筛选", () => {
+  const href = buildSearchHref({
+    searchQuery: "React",
+    selectedTag: "Hooks",
+    selectedCategory: "前端",
+    currentPage: 2,
+    sortBy: "newest",
+    viewMode: "compact",
+  })
+
+  assert.equal(href, "/search?q=React&tag=Hooks&category=%E5%89%8D%E7%AB%AF&sort=newest&view=compact&page=2")
+})

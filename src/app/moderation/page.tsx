@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { isAuthenticatedServer } from "@/lib/server/auth"
-import { listComments } from "@/lib/server/comments"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import { listPosts } from "@/lib/server/store"
-import ModerationClient from "./ModerationClient"
+import { isAuthenticatedServer } from "@/工具/服务端/身份验证"
+import { listComments } from "@/工具/服务端/comments"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import { listPosts } from "@/工具/服务端/存储"
+import ModerationClient from "./评论审核页面"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getResolvedSeoSettings()

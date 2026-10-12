@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { isAuthenticatedServer } from "@/lib/server/auth"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import AdminSettingsClient from "./AdminSettingsClient"
+import { isAuthenticatedServer } from "@/工具/服务端/身份验证"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import AdminSettingsClient from "./站点设置页面"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getResolvedSeoSettings()

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import MusicPageClient from "./MusicPageClient"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import MusicPageClient from "./音乐页面"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getResolvedSeoSettings()

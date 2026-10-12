@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
 
 function createShortName(name: string) {
   const trimmed = name.trim()

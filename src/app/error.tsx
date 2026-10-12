@@ -2,9 +2,9 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
-import { PaletteBadge, paletteTones } from "@/components/PaletteCharacters"
-import SiteBrand from "@/components/SiteBrand"
-import SiteFooter from "@/components/SiteFooter"
+import { PaletteBadge, paletteTones } from "@/组件/彩色角色"
+import SiteBrand from "@/组件/站点品牌"
+import SiteFooter from "@/组件/站点页脚"
 
 export default function GlobalError({
   error,
@@ -31,7 +31,7 @@ export default function GlobalError({
             <div className="mb-4 flex items-center gap-3">
               <PaletteBadge tone={paletteTones[1].tone} mouthTone={paletteTones[1].mouthTone} mood={paletteTones[1].mood} />
               <div>
-                <p className="section-kicker">Something Went Wrong</p>
+                <p className="section-kicker">出现错误</p>
                 <h1 className="mt-1 text-[2rem] font-semibold tracking-[-0.06em] sm:text-[2.5rem]">
                   页面刚刚卡了一下。
                 </h1>
@@ -63,7 +63,7 @@ export default function GlobalError({
             <div className="flex w-full max-w-sm flex-col items-center gap-5 text-center">
               <PaletteBadge tone={paletteTones[0].tone} mouthTone={paletteTones[0].mouthTone} mood={paletteTones[0].mood} />
               <div>
-                <p className="section-kicker">Fallback</p>
+                <p className="section-kicker">恢复页面</p>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   这是一个兜底错误页，至少不会让你掉进默认的空白页面里。
                 </p>

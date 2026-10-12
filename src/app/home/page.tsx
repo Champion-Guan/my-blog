@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
-import { getAllPosts, getAllSeries, getAllTags } from "@/lib/posts"
-import { parseHomeQueryState } from "@/lib/home-query"
-import { filterPostsForListing } from "@/lib/post-search"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import HomeClient from "./HomeClient"
+import { getAllPosts, getAllSeries, getAllTags } from "@/工具/文章"
+import { parseHomeQueryState } from "@/工具/首页查询"
+import { filterPostsForListing } from "@/工具/文章搜索"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import HomeClient from "./首页内容"
 
 export const revalidate = 300
 

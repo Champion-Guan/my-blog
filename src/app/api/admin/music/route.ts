@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { isAuthenticatedRequest } from "@/lib/server/auth"
-import { getMusicLibraryWarning, listMusicLibraryTracks, uploadManagedMusicTrack, deleteManagedMusicTrack, canUseDirectBlobMusicUpload, canWriteMusicLibrary } from "@/lib/server/music"
+import { isAuthenticatedRequest } from "@/工具/服务端/身份验证"
+import { getMusicLibraryWarning, listMusicLibraryTracks, uploadManagedMusicTrack, deleteManagedMusicTrack, canUseDirectBlobMusicUpload, canWriteMusicLibrary } from "@/工具/服务端/音乐"
 
 export async function GET(request: NextRequest) {
   if (!isAuthenticatedRequest(request)) {

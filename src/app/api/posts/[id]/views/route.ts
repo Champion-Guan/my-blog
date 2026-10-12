@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPostById, incrementPostViews } from '@/lib/server/store'
+import { getPostById, incrementPostViews } from '@/工具/服务端/存储'
 
 export async function POST(
   request: NextRequest,

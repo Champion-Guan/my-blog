@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { buildSiteSnapshotFileName } from "@/lib/site-backup"
-import { isAuthenticatedRequest } from "@/lib/server/auth"
-import { buildSiteBackupSnapshot } from "@/lib/server/site-backup"
+import { buildSiteSnapshotFileName } from "@/工具/站点备份"
+import { isAuthenticatedRequest } from "@/工具/服务端/身份验证"
+import { buildSiteBackupSnapshot } from "@/工具/服务端/站点备份"
 
 export async function GET(request: NextRequest) {
   if (!isAuthenticatedRequest(request)) {

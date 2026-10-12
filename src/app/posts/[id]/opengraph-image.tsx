@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
-import { getPost } from "@/lib/posts"
-import { clampOgText, pickOgCategoryLabel } from "@/lib/og"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
+import { getPost } from "@/工具/文章"
+import { clampOgText, pickOgCategoryLabel } from "@/工具/分享图片"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
 
 export const size = {
   width: 1200,
@@ -96,7 +96,7 @@ export default async function PostOpenGraphImage({ params }: Props) {
               }}
             >
               <div style={{ borderRadius: "24px", background: "#16171d", color: "#fff", padding: "22px 20px" }}>
-                <div style={{ fontSize: "16px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.68)" }}>BLOG</div>
+                <div style={{ fontSize: "16px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.68)" }}>博客</div>
                 <div style={{ marginTop: "10px", fontSize: "24px", fontWeight: 700 }}>{settings.brandName}</div>
               </div>
               <div

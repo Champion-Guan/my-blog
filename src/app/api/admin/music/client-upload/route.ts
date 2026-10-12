@@ -1,8 +1,8 @@
 import { handleUpload } from "@vercel/blob/client"
 import { NextRequest, NextResponse } from "next/server"
-import { getSupportedMusicContentTypes, MUSIC_UPLOAD_MAX_BYTES } from "@/lib/music-upload"
-import { isAuthenticatedRequest } from "@/lib/server/auth"
-import { canUseDirectBlobMusicUpload } from "@/lib/server/music"
+import { getSupportedMusicContentTypes, MUSIC_UPLOAD_MAX_BYTES } from "@/工具/音乐上传"
+import { isAuthenticatedRequest } from "@/工具/服务端/身份验证"
+import { canUseDirectBlobMusicUpload } from "@/工具/服务端/音乐"
 
 export async function POST(request: NextRequest) {
   if (!canUseDirectBlobMusicUpload()) {

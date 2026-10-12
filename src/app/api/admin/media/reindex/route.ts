@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { listPosts, listPostMediaReferenceDetails, syncAllPostMediaReferences } from '@/lib/server/store'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { listPosts, listPostMediaReferenceDetails, syncAllPostMediaReferences } from '@/工具/服务端/存储'
 
 export async function POST(request: NextRequest) {
   if (!isAuthenticatedRequest(request)) {

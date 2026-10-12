@@ -1,20 +1,20 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { parseMediaQueryState } from "@/lib/media-query"
-import { isAuthenticatedServer } from "@/lib/server/auth"
-import SectionPageShell from "@/components/SectionPageShell"
-import { canWriteMediaLibrary, getMediaLibraryWarning as getImageLibraryWarning, listMediaAssets } from "@/lib/server/media"
+import { parseMediaQueryState } from "@/工具/媒体查询"
+import { isAuthenticatedServer } from "@/工具/服务端/身份验证"
+import SectionPageShell from "@/组件/栏目页框架"
+import { canWriteMediaLibrary, getMediaLibraryWarning as getImageLibraryWarning, listMediaAssets } from "@/工具/服务端/媒体"
 import {
   canUseDirectBlobMusicUpload,
   canWriteMusicLibrary,
   getMusicLibraryWarning,
   listMusicLibraryTracks,
-} from "@/lib/server/music"
-import { getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import AdminMediaClient from "./AdminMediaClient"
-import AdminMusicClient from "../music/AdminMusicClient"
+} from "@/工具/服务端/音乐"
+import { getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import AdminMediaClient from "./媒体管理页面"
+import AdminMusicClient from "../music/音乐管理页面"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getResolvedSeoSettings()
