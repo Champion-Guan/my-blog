@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import StructuredDataScript from "@/components/StructuredDataScript"
-import { MusicProvider } from "@/context/MusicContext"
-import { buildRootMetadata, buildWebsiteStructuredData } from "@/lib/server/site-metadata"
-import "./globals.css"
+import StructuredDataScript from "@/组件/结构化数据脚本"
+import { MusicProvider } from "@/上下文/音乐上下文"
+import { buildRootMetadata, buildWebsiteStructuredData } from "@/工具/服务端/站点metadata"
+import "./全局样式.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const websiteStructuredData = await buildWebsiteStructuredData()
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="zh-CN" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <StructuredDataScript id="website-structured-data" data={websiteStructuredData} />
         <MusicProvider>

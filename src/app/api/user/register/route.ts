@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
-import { buildUserSessionCookie, createUserSessionToken, hashUserPassword } from '@/lib/server/comment-user-auth'
-import { consumePersistentRateLimit, getRequesterKey } from '@/lib/server/rate-limit'
-import { createUser, getUserByUsername } from '@/lib/server/store'
+import { buildUserSessionCookie, createUserSessionToken, hashUserPassword } from '@/工具/服务端/评论用户身份验证'
+import { consumePersistentRateLimit, getRequesterKey } from '@/工具/服务端/频率限制'
+import { createUser, getUserByUsername } from '@/工具/服务端/存储'
 
 const USER_REGISTER_RATE_WINDOW_MS = 10 * 60_000
 const USER_REGISTER_RATE_LIMIT = 4

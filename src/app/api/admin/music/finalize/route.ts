@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { isAuthenticatedRequest } from "@/lib/server/auth"
-import { finalizeUploadedBlobMusicTrack } from "@/lib/server/music"
+import { isAuthenticatedRequest } from "@/工具/服务端/身份验证"
+import { finalizeUploadedBlobMusicTrack } from "@/工具/服务端/音乐"
 
 export async function POST(request: NextRequest) {
   if (!isAuthenticatedRequest(request)) {

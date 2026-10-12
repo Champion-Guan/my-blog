@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import PostEditorContentEditor from "@/components/PostEditorContentEditor"
-import PostEditorMetaFields from "@/components/PostEditorMetaFields"
-import PostEditorPageShell from "@/components/PostEditorPageShell"
-import { useAuthStatus } from "@/hooks/useAuthStatus"
+import PostEditorContentEditor from "@/组件/文章内容编辑器"
+import PostEditorMetaFields from "@/组件/文章信息字段"
+import PostEditorPageShell from "@/组件/文章编辑页框架"
+import { useAuthStatus } from "@/钩子/使用管理员登录状态"
 import type { MusicTrack } from "@/app/api/music/route"
-import type { Post } from "@/lib/posts"
-import { buildEditorImageTag, createEditorImageInsertion } from "@/lib/editor-media"
+import type { Post } from "@/工具/文章"
+import { buildEditorImageTag, createEditorImageInsertion } from "@/工具/编辑器媒体"
 
 interface LocalDraft {
   slug: string

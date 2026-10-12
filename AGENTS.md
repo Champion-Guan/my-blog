@@ -1,5 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# 此 Next.js 版本可能与你熟悉的版本不同
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+此版本包含破坏性变更，接口、约定和文件结构可能与已有知识不同。编写代码前，请先阅读 `node_modules/next/dist/docs/` 中的相关指南，并留意弃用提示。
 <!-- END:nextjs-agent-rules -->

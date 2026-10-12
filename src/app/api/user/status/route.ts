@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getCommentUserFromServer } from '@/lib/server/comment-user-auth'
+import { getCommentUserFromServer } from '@/工具/服务端/评论用户身份验证'
 
 export async function GET() {
   const user = await getCommentUserFromServer()

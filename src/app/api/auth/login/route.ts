@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { buildSessionCookie, createSessionToken, getAuthPassword } from '@/lib/server/auth'
-import { consumePersistentRateLimit, getRequesterKey, resetPersistentRateLimit } from '@/lib/server/rate-limit'
+import { buildSessionCookie, createSessionToken, getAuthPassword } from '@/工具/服务端/身份验证'
+import { consumePersistentRateLimit, getRequesterKey, resetPersistentRateLimit } from '@/工具/服务端/频率限制'
 
 const ADMIN_LOGIN_RATE_WINDOW_MS = 10 * 60_000
 const ADMIN_LOGIN_RATE_LIMIT = 5

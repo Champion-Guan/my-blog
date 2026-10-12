@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticatedRequest } from '@/lib/server/auth'
-import { deleteUserAccount, setUserBanState } from '@/lib/server/store'
+import { isAuthenticatedRequest } from '@/工具/服务端/身份验证'
+import { deleteUserAccount, setUserBanState } from '@/工具/服务端/存储'
 
 interface RouteProps {
   params: Promise<{ id: string }>

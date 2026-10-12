@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
-import StructuredDataScript from "@/components/StructuredDataScript"
+import StructuredDataScript from "@/组件/结构化数据脚本"
 import { redirect } from "next/navigation"
 import { notFound } from "next/navigation"
-import { getAdjacentPosts, getAllPosts, getPost, getPostContent, calculateReadingTime, extractHeadings, getRelatedPosts } from "@/lib/posts"
-import { isAuthenticatedServer } from "@/lib/server/auth"
-import { buildBlogPostingStructuredData, getResolvedSeoSettings } from "@/lib/server/site-metadata"
-import { getSiteSettings } from "@/lib/server/site-settings"
-import PostClient from "./PostClient"
+import { getAdjacentPosts, getAllPosts, getPost, getPostContent, calculateReadingTime, extractHeadings, getRelatedPosts } from "@/工具/文章"
+import { isAuthenticatedServer } from "@/工具/服务端/身份验证"
+import { buildBlogPostingStructuredData, getResolvedSeoSettings } from "@/工具/服务端/站点metadata"
+import { getSiteSettings } from "@/工具/服务端/站点设置"
+import PostClient from "./文章页面"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -64,13 +64,13 @@ export default async function PostPage({ params }: Props) {
     notFound()
   }
 
-  // If post is a draft, check auth on server side before rendering
+  // 草稿文章在渲染前先进行服务端身份验证。
   if (post.draft) {
     const isAuthenticated = await isAuthenticatedServer()
     if (!isAuthenticated) {
       redirect(`/home?login=1&next=/write/${post.id}`)
     }
-    // Authenticated user viewing a draft -> go to edit page
+    // 已登录用户查看草稿时，跳转到编辑页。
     redirect(`/write/${post.id}`)
   }
 

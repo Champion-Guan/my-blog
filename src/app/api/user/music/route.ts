@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getCommentUserFromRequest } from '@/lib/server/comment-user-auth'
-import { getUserMusicLibrary, upsertUserMusicLibrary } from '@/lib/server/store'
+import { getCommentUserFromRequest } from '@/工具/服务端/评论用户身份验证'
+import { getUserMusicLibrary, upsertUserMusicLibrary } from '@/工具/服务端/存储'
 
 export async function GET(request: NextRequest) {
   const user = await getCommentUserFromRequest(request)
