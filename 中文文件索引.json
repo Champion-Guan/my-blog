@@ -1,5 +1,5 @@
 {
-  "项目入口.md": "说明书.md",
+  "README.md": "README.md",
   "scripts/export-site-snapshot.ts": "脚本/导出站点快照.ts",
   "scripts/restore-site-snapshot.ts": "脚本/恢复站点快照.ts",
   "src/app/about/AboutClient.tsx": "src/app/about/关于页面.tsx",
