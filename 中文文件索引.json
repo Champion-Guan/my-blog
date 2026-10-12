@@ -108,5 +108,13 @@
   "tests/search-query.test.ts": "测试/搜索查询.test.ts",
   "tests/site-config.test.ts": "测试/站点配置.test.ts",
   "tests/store-integration.test.ts": "测试/存储集成.test.ts",
-  "tests/structured-data.test.ts": "测试/结构化数据.test.ts"
+  "tests/structured-data.test.ts": "测试/结构化数据.test.ts",
+  "README.md": "项目入口.md",
+  "AGENTS.md": "代理规则.md",
+  "CLAUDE.md": "模型规则.md",
+  "data": "数据",
+  "data/posts/posts.json": "数据/文章/文章.json",
+  "data/comments.json": "数据/评论.json",
+  "public/og-image.svg": "public/分享图.svg",
+  ".github/workflows/ci.yml": ".github/workflows/持续集成.yml"
 }

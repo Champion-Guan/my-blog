@@ -17,16 +17,16 @@ export async function withTempWorkspace<T>(
   overrides?: Partial<Record<string, string>>
 ) {
   const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "myblog-store-"))
-  const dataDir = path.join(workspaceDir, "data")
-  const postsDir = path.join(dataDir, "posts")
+  const dataDir = path.join(workspaceDir, "数据")
+  const postsDir = path.join(dataDir, "文章")
   const uploadsDir = path.join(workspaceDir, "public", "uploads")
-  const musicDir = path.join(workspaceDir, "public", "music")
+  const musicDir = path.join(workspaceDir, "public", "音乐")
 
   fs.mkdirSync(postsDir, { recursive: true })
   fs.mkdirSync(uploadsDir, { recursive: true })
   fs.mkdirSync(musicDir, { recursive: true })
-  fs.copyFileSync(path.join(repoRoot, "data", "posts", "posts.json"), path.join(postsDir, "posts.json"))
-  fs.copyFileSync(path.join(repoRoot, "data", "comments.json"), path.join(dataDir, "comments.json"))
+  fs.copyFileSync(path.join(repoRoot, "数据", "文章", "文章.json"), path.join(postsDir, "文章.json"))
+  fs.copyFileSync(path.join(repoRoot, "数据", "评论.json"), path.join(dataDir, "评论.json"))
 
   const previousEnv = {
     BLOG_DATA_DIR: process.env.BLOG_DATA_DIR,
@@ -44,8 +44,8 @@ export async function withTempWorkspace<T>(
 
   process.env.BLOG_DATA_DIR = dataDir
   process.env.BLOG_DB_PATH = path.join(dataDir, "blog.db")
-  process.env.BLOG_POSTS_JSON_PATH = path.join(postsDir, "posts.json")
-  process.env.BLOG_COMMENTS_JSON_PATH = path.join(dataDir, "comments.json")
+  process.env.BLOG_POSTS_JSON_PATH = path.join(postsDir, "文章.json")
+  process.env.BLOG_COMMENTS_JSON_PATH = path.join(dataDir, "评论.json")
   process.env.BLOG_MEDIA_DIR = uploadsDir
   process.env.BLOG_MUSIC_DIR = musicDir
   delete process.env.DATABASE_URL

@@ -6,14 +6,14 @@ import { spawn } from "node:child_process"
 const repoRoot = process.cwd()
 const port = process.env.PLAYWRIGHT_PORT || "3101"
 const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "myblog-e2e-"))
-const dataDir = path.join(workspaceDir, "data")
-const postsDir = path.join(dataDir, "posts")
-const uploadsDir = path.join(workspaceDir, "public", "uploads")
+const dataDir = path.join(workspaceDir, "数据")
+const postsDir = path.join(dataDir, "文章")
+const uploadsDir = path.join(workspaceDir, "public", "上传")
 
 fs.mkdirSync(postsDir, { recursive: true })
 fs.mkdirSync(uploadsDir, { recursive: true })
-fs.copyFileSync(path.join(repoRoot, "data", "posts", "posts.json"), path.join(postsDir, "posts.json"))
-fs.copyFileSync(path.join(repoRoot, "data", "comments.json"), path.join(dataDir, "comments.json"))
+fs.copyFileSync(path.join(repoRoot, "数据", "文章", "文章.json"), path.join(postsDir, "文章.json"))
+fs.copyFileSync(path.join(repoRoot, "数据", "评论.json"), path.join(dataDir, "评论.json"))
 
 const child = spawn(
   process.platform === "win32" ? "npx.cmd" : "npx",
@@ -25,8 +25,8 @@ const child = spawn(
       ...process.env,
       BLOG_DATA_DIR: dataDir,
       BLOG_DB_PATH: path.join(dataDir, "blog.db"),
-      BLOG_POSTS_JSON_PATH: path.join(postsDir, "posts.json"),
-      BLOG_COMMENTS_JSON_PATH: path.join(dataDir, "comments.json"),
+      BLOG_POSTS_JSON_PATH: path.join(postsDir, "文章.json"),
+      BLOG_COMMENTS_JSON_PATH: path.join(dataDir, "评论.json"),
       BLOG_MEDIA_DIR: uploadsDir,
       AUTH_PASSWORD: "integration-admin",
       AUTH_SECRET: "integration-secret",

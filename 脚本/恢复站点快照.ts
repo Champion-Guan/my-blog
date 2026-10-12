@@ -33,7 +33,7 @@ async function main() {
     ? path.resolve(dbArg)
     : process.env.BLOG_DB_PATH
       ? path.resolve(process.env.BLOG_DB_PATH)
-      : path.join(process.cwd(), "data", "blog.db")
+      : path.join(process.cwd(), "数据", "blog.db")
 
   const targetDataDir = path.dirname(targetDbPath)
   const targetUploadsDir = uploadsArg
