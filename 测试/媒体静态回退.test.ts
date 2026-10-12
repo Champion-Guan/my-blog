@@ -25,7 +25,7 @@ test("上传目录为空时仍列出文章引用的本地图片", async () => {
     assert.equal(Array.isArray(listPayload.assets), true)
     assert.equal(
       listPayload.assets.some((asset: { pathname?: string; storage?: string }) =>
-        asset.pathname === "essay-morning-desk.svg" &&
+        asset.pathname === "清晨书桌.svg" &&
         asset.storage === "local"
       ),
       true
